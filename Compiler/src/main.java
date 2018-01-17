@@ -25,7 +25,8 @@ public class main {
             "        number := 2;\n" +
             "        a := number;\n" +
             "        b := 10 * a + 10 * number / 4;\n" +
-            "        c := a - - b\n" +
+            "        c := a - - b;\n" +
+            "        writeln(a, b, c, number);\n" +
             "    END;\n" +
             "    x := 11;\n" +
             "END.";
