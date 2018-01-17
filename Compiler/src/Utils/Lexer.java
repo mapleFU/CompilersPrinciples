@@ -118,7 +118,6 @@ public class Lexer {
             return get_id();
         }  else {
             error();
-            // TODO: make clear what to return
             return new Token(TokenType.EOF, new EndOfText());
         }
     }

@@ -480,6 +480,7 @@ public class Parser {
             Arrays.asList(TokenType.MUL, TokenType.DIV)
     );
     private AST term() {
+        // term -> factor((PLUS|MUL)term)*
         AST current_ast = factor();
         while (FACTOR_VALID_SET.contains(this.current_token.type)) {
             Token last_token = this.current_token;

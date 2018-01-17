@@ -25,7 +25,6 @@ enum TokenType {
     REAL("REAL"),
     COMMA("COMMA"),
     COLON("COLON"),
-    // TODO: 求求你了把这里搞清楚把
     // 变量声明
     VARDECL("VAR"),
     INTTYPE("INTEGER"),

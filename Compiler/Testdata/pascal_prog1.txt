@@ -1,0 +1,14 @@
+VAR
+    a, b, c, number: INTEGER;
+    x: REAL;
+BEGIN
+    BEGIN
+        number := 2;
+        a := number;
+        b := 10 * a + 10 * number / 4;
+        c := a - - b;
+        writeln(a, b, c, number);
+    END;
+    x := 11;
+    writeln(x + (2 * 3.0) / 2 - 5);
+END.

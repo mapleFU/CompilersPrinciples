@@ -1,9 +1,8 @@
 # Maplewish 的 Pascal 解释器
 ## QuickStart
+在srcpath中放入符合要求的 PASCAL 代码文件，运行
 
-`src/main`运行的main中的 `main`，根据提示输入表达式
-
-目前只支持整数和四则运算。
+```Compiler.jar srcpath``` 
 
 ## 模块
 

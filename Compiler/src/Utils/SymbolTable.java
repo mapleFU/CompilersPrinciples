@@ -21,11 +21,11 @@ public class SymbolTable {
     // 最初的是全局变量的符号表
     static final private SymbolTable GLOBAL = new SymbolTable();
     static private SymbolTable current_table = GLOBAL;      // 先初始化为GLOBAL的信息
-    static {
-        // 添加内置的类型
-        current_table.table_insert("INTEGER", new BuiltinTypeObject(new Token(TokenType.TYPE, "INTEGER")));
-        current_table.table_insert("REAL", new BuiltinTypeObject(new Token(TokenType.TYPE, "REAL")));
-    }
+//    static {
+//        // 添加内置的类型
+//        current_table.table_insert("INTEGER", new BuiltinTypeObject(new Token(TokenType.TYPE, "INTEGER")));
+//        current_table.table_insert("REAL", new BuiltinTypeObject(new Token(TokenType.TYPE, "REAL")));
+//    }
 
     static public ValueObject lookup(String name) {
         SymbolTable search_table = current_table;       // 搜索中的符号表
@@ -47,8 +47,8 @@ public class SymbolTable {
     }
 
     static public void FinalizeScope() {
-        System.out.println(current_table);
-        System.out.println("Is being destroyed.\n\n");
+//        System.out.println(current_table);
+//        System.out.println("Is being destroyed.\n\n");
         if (current_table.father_table == null) {
             throw new RuntimeException("Call Finalize Scope error.");
         } else {
