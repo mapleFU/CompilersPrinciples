@@ -4,6 +4,7 @@ import Utils.Value.*;
 import com.sun.javafx.fxml.expression.Expression;
 
 import java.io.Serializable;
+import java.text.Format;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -100,6 +101,57 @@ class UnaryOp extends AST {
                 throw new RuntimeException("SyntaxError in UnaryOp with token " + token);
         }
         return to_return;
+    }
+}
+
+class Forloop extends AST {
+    private String value_name;  //循环变量名称
+    private AssignNode init;
+    private AST upper;
+    private boolean inc;    //是否递增
+    private AST exec;
+    Forloop() {
+        super(new Token(TokenType.FOR,null));
+    }
+
+    @Override
+    NoneValue walk() {
+        init.walk();
+        ValueObject variable = SymbolTable.lookup(value_name);
+        if (variable == null) {
+            throw new RuntimeException("Didn'd declear " + value_name + " before use it");
+        }
+        int upper_value = (int)upper.walk().getValue();
+        int cur_value = (int)(SymbolTable.lookup(value_name).getValue());
+        while (cur_value != upper_value) {
+            exec.walk();
+            if (inc) {
+                ++cur_value;
+            } else {
+                --cur_value;
+            }
+        }
+        return new NoneValue();
+    }
+
+    public void setInc(boolean inc) {
+        this.inc = inc;
+    }
+
+    public void setInit(AssignNode init) {
+        this.init = init;
+    }
+
+    public void setUpper(AST upper) {
+        this.upper = upper;
+    }
+
+    public void setValue_name(String value_name) {
+        this.value_name = value_name;
+    }
+
+    public void setExec(AST exec) {
+        this.exec = exec;
     }
 }
 
@@ -278,6 +330,45 @@ public class Parser {
         this.lexer = lexer;
     }
 
+    private Forloop forloop() {
+        /*
+        for assign (to|downto) value
+        compound_statement|statement
+         */
+        Forloop forloop = new Forloop();
+        lexer.eat_token(TokenType.FOR);
+        current_token = lexer.get_next_token();
+        forloop.setValue_name((String)current_token.value);
+        AssignNode assignNode = assignment_statement();
+        forloop.setInit(assignNode);
+        if (current_token.type == TokenType.TO) {
+            forloop.setInc(true);
+        } else if (current_token.type == TokenType.DOWNTO) {
+            forloop.setInc(false);
+        } else {
+            throw new RuntimeException("Cannot found token to or downto in for loop");
+        }
+        lexer.eat_token(current_token.type);
+        current_token = lexer.get_next_token();
+
+        if (current_token.type == TokenType.INTEGER) {
+            forloop.setUpper(factor());
+            lexer.eat_token(TokenType.INTEGER);
+            current_token = lexer.get_next_token();
+        } else {
+            throw new RuntimeException("Cannot found end in forloop.");
+        }
+
+        lexer.eat_token(TokenType.DO);
+        current_token = lexer.get_next_token();
+        if (current_token.type == TokenType.BEGIN) {
+            forloop.setExec(compound_statement());
+        } else {
+            forloop.setExec(statement());
+        }
+        return forloop;
+    }
+
     private WriteStatement writeln_statement() {
         /*
         writeln( expr , )
@@ -338,14 +429,19 @@ public class Parser {
         ArrayList<AST> statements = new ArrayList<>();
         AST cur_state = statement();
         statements.add(cur_state);
-        while (current_token.type == TokenType.SEMI) {
-            lexer.eat_token(TokenType.SEMI);
-            current_token = lexer.get_next_token();
-            if (current_token.type != TokenType.VAR && current_token.type != TokenType.WRITELN) {
-                break;
+        while (current_token.type == TokenType.SEMI || current_token.type == TokenType.FOR) {
+            if (current_token.type == TokenType.SEMI) {
+                lexer.eat_token(TokenType.SEMI);
+                current_token = lexer.get_next_token();
+                if (current_token.type != TokenType.VAR && current_token.type != TokenType.WRITELN && current_token.type != TokenType.FOR) {
+                    break;
+                }
+                cur_state = statement();
+                statements.add(cur_state);
+            } else if (current_token.type == TokenType.FOR) {
+                cur_state = forloop();
+                statements.add(cur_state);
             }
-            cur_state = statement();
-            statements.add(cur_state);
         }
 
         return statements;

@@ -15,7 +15,6 @@ public class main {
     args1 means dict
      */
     public static void main(String[] args) throws IOException {
-        System.out.println(args[0]);
         byte[] encoded = Files.readAllBytes(Paths.get(args[0]));
         String src = new String(encoded, Charset.forName("UTF-8"));
 

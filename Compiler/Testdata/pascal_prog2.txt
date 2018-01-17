@@ -1,0 +1,7 @@
+VAR
+    x, y : INTEGER;
+BEGIN
+    x := 2;
+    y := 3 + x;
+    writeln(x, y);
+END.

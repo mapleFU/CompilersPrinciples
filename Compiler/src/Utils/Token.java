@@ -38,7 +38,11 @@ enum TokenType {
     // 表示类型
     TYPE("TYPE"),
     // 打印并换行
-    WRITELN("writeln");
+    WRITELN("writeln"),
+    FOR("for"),
+    TO("to"),
+    DOWNTO("downto"),
+    DO("do");
 
     private String abbrevation;
 

@@ -18,6 +18,10 @@ class RESERVED_KEYWORDS {
         keyword_map.put("INTEGER", new Token(TokenType.INTTYPE, "INTEGER"));
         keyword_map.put("REAL", new Token(TokenType.REALTYPE, "REAL"));
         keyword_map.put("writeln", new Token(TokenType.WRITELN, "writeln"));
+        keyword_map.put("for", new Token(TokenType.FOR, "for"));
+        keyword_map.put("to", new Token(TokenType.TO, "to"));
+        keyword_map.put("downto", new Token(TokenType.DOWNTO, "downto"));
+        keyword_map.put("do", new Token(TokenType.DO, "do"));
     }
     static Token get_token(String arg) {
         return keyword_map.get(arg);
@@ -117,6 +121,7 @@ public class Lexer {
             // 如果是字母
             return get_id();
         }  else {
+            System.err.println("Want to get " + src_text.charAt(index));
             error();
             return new Token(TokenType.EOF, new EndOfText());
         }
@@ -251,6 +256,10 @@ public class Lexer {
             case VARDECL:
                 //do writeln
             case WRITELN:
+            case DO:
+            case TO:
+            case FOR:
+            case DOWNTO:
                 // 这两个case都已经检阅完毕
                 eat_id(t);
                 break;

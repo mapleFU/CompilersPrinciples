@@ -1,0 +1,9 @@
+VAR
+    i, x, y : INTEGER;
+BEGIN
+    x := 2;
+    y := 3 + x;
+    for i := 1 to 4 do
+        x := x + y;
+    writeln(x, y);
+END.
